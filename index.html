@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas Digitales para Escribir, Pensar y Decidir</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #5ba3a8 0%, #4a8f94 100%);
+            overflow: hidden;
+        }
+        
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8ecef 100%);
+            padding: 60px;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+        }
+        
+        .slide-header {
+            border-bottom: 3px solid #5ba3a8;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .slide-title {
+            font-size: 2.8em;
+            color: #2c5f63;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .slide-subtitle {
+            font-size: 1.3em;
+            color: #5ba3a8;
+            font-style: italic;
+        }
+        
+        .slide-content {
+            flex: 1;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .text-content {
+            flex: 1;
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .text-content h2 {
+            color: #2c5f63;
+            font-size: 2em;
+            margin-bottom: 25px;
+        }
+        
+        .text-content h3 {
+            color: #5ba3a8;
+            font-size: 1.5em;
+            margin: 20px 0 15px 0;
+        }
+        
+        .text-content ul {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+        
+        .text-content li {
+            margin-bottom: 12px;
+        }
+        
+        .text-content em {
+            color: #7a6f47;
+            font-style: italic;
+        }
+        
+        .visual-content {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .visual-content svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #5ba3a8;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-family: 'Georgia', serif;
+        }
+        
+        .nav-button:hover {
+            background: #2c5f63;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #2c5f63;
+            font-size: 1.1em;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .author-info {
+            text-align: center;
+            font-size: 1.3em;
+            color: #2c5f63;
+            margin-top: 20px;
+        }
+        
+        .keywords {
+            background: rgba(91, 163, 168, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+        
+        .quote {
+            background: rgba(122, 111, 71, 0.1);
+            border-left: 4px solid #7a6f47;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .title-slide .slide-title {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+        
+        .final-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide.active .text-content > * {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .slide.active .text-content > *:nth-child(2) {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+        
+        .slide.active .text-content > *:nth-child(3) {
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Portada -->
+        <div class="slide active title-slide">
+            <div class="text-content">
+                <h1 class="slide-title">Herramientas Digitales para Escribir, Pensar y Decidir</h1>
+                <p class="slide-subtitle">Una guía reflexiva para científicas y científicos sociales en formación</p>
+                <p class="author-info">Por Anaís Ortega Gómez</p>
+            </div>
+            <div class="visual-content">
+                <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="water1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5ba3a8;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#4a8f94;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <g id="knotPattern">
+                        <path d="M50,200 Q100,150 150,200 T250,200" fill="none" stroke="#5ba3a8" stroke-width="3" opacity="0.6"/>
+                        <path d="M100,150 Q150,100 200,150 T300,150" fill="none" stroke="#7a6f47" stroke-width="2" opacity="0.5"/>
+                        <path d="M75,250 Q125,200 175,250 T275,250" fill="none" stroke="#4a8f94" stroke-width="3" opacity="0.6"/>
+                        <circle cx="200" cy="200" r="60" fill="none" stroke="url(#water1)" stroke-width="4"/>
+                        <circle cx="200" cy="200" r="45" fill="none" stroke="#7a6f47" stroke-width="2" opacity="0.7"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 2: Resumen -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Resumen</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>Este artículo analiza el <em>uso ético y reflexivo</em> de herramientas digitales contemporáneas en la escritura académica, dirigido a estudiantes de ciencias sociales en formación.</p>
+                    <p style="margin-top: 20px;">Las herramientas digitales <strong>no son neutras ni autosuficientes</strong>, sino dispositivos tecnológicos insertos en sistemas sociales complejos.</p>
+                    <div class="keywords">
+                        <strong>Marco teórico:</strong> Sociocibernética y teoría crítica básica, con aportes de Niklas Luhmann, Heinz von Foerster y Bernard Scott.
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="networkPattern">
+                            <circle cx="200" cy="100" r="25" fill="#5ba3a8" opacity="0.7"/>
+                            <circle cx="100" cy="200" r="25" fill="#4a8f94" opacity="0.7"/>
+                            <circle cx="300" cy="200" r="25" fill="#7a6f47" opacity="0.7"/>
+                            <circle cx="150" cy="300" r="25" fill="#5ba3a8" opacity="0.7"/>
+                            <circle cx="250" cy="300" r="25" fill="#4a8f94" opacity="0.7"/>
+                            <line x1="200" y1="100" x2="100" y2="200" stroke="#5ba3a8" stroke-width="2" opacity="0.5"/>
+                            <line x1="200" y1="100" x2="300" y2="200" stroke="#5ba3a8" stroke-width="2" opacity="0.5"/>
+                            <line x1="100" y1="200" x2="150" y2="300" stroke="#4a8f94" stroke-width="2" opacity="0.5"/>
+                            <line x1="300" y1="200" x2="250" y2="300" stroke="#4a8f94" stroke-width="2" opacity="0.5"/>
+                            <line x1="150" y1="300" x2="250" y2="300" stroke="#7a6f47" stroke-width="2" opacity="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Introducción -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Introducción</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>En la actualidad, <strong>la escritura académica ya no puede comprenderse sin la mediación de herramientas digitales.</strong></p>
+                    <p style="margin-top: 20px;">Desde la búsqueda de fuentes hasta la edición final de un documento, la tecnología afecta cada fase del proceso.</p>
+                    <div class="quote">
+                        "Los algoritmos participan en procesos de comunicación artificial, produciendo formas de inteligencia social que requieren una observación crítica constante." <br>— Elena Esposito (2022)
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="wavesPattern">
+                            <path d="M0,200 Q50,180 100,200 T200,200 T300,200 T400,200" fill="none" stroke="#5ba3a8" stroke-width="3" opacity="0.6"/>
+                            <path d="M0,220 Q50,200 100,220 T200,220 T300,220 T400,220" fill="none" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <path d="M0,240 Q50,220 100,240 T200,240 T300,240 T400,240" fill="none" stroke="#7a6f47" stroke-width="2" opacity="0.4"/>
+                            <rect x="150" y="100" width="100" height="80" rx="5" fill="#5ba3a8" opacity="0.3"/>
+                            <rect x="165" y="115" width="70" height="10" fill="#2c5f63" opacity="0.6"/>
+                            <rect x="165" y="135" width="70" height="10" fill="#2c5f63" opacity="0.6"/>
+                            <rect x="165" y="155" width="70" height="10" fill="#2c5f63" opacity="0.6"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Sistemas, decisiones y herramientas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">1. Sistemas, Decisiones y Herramientas</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <h3>Perspectiva sociocibernética</h3>
+                    <p>Toda herramienta digital puede concebirse como parte de un <em>sistema más amplio de decisiones</em>.</p>
+                    <p style="margin-top: 20px;">En el contexto de la escritura académica, las herramientas digitales son <strong>subsistemas</strong> que permiten:</p>
+                    <ul>
+                        <li>Seleccionar información</li>
+                        <li>Almacenar datos</li>
+                        <li>Procesar contenidos</li>
+                        <li>Redistribuir conocimiento</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-weight: 600;">Su uso no es neutro: cada decisión afecta el tipo de conocimiento que se produce.</p>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="systemPattern">
+                            <rect x="100" y="50" width="200" height="80" rx="10" fill="#5ba3a8" opacity="0.3"/>
+                            <rect x="80" y="160" width="100" height="60" rx="8" fill="#4a8f94" opacity="0.4"/>
+                            <rect x="220" y="160" width="100" height="60" rx="8" fill="#4a8f94" opacity="0.4"/>
+                            <rect x="100" y="270" width="200" height="80" rx="10" fill="#7a6f47" opacity="0.3"/>
+                            <path d="M200,130 L130,160" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            <path d="M200,130 L270,160" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            <path d="M130,220 L150,270" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            <path d="M270,220 L250,270" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#2c5f63"/>
+                                </marker>
+                            </defs>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Gestores de referencias -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">2. Gestores de Referencias y Ética de la Fuente</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>El uso de <strong>Zotero, Mendeley o EndNote</strong> permite automatizar la organización de fuentes.</p>
+                    <div class="quote">
+                        Sin embargo, la integridad intelectual requiere no solo citar correctamente, sino <em>entender el contexto</em> de cada referencia.
+                    </div>
+                    <p style="margin-top: 25px; font-size: 1.3em; color: #2c5f63; font-weight: 600;">
+                        Automatizar la citación no exime de la responsabilidad epistemológica.
+                    </p>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="booksPattern">
+                            <rect x="80" y="150" width="60" height="100" rx="3" fill="#5ba3a8" opacity="0.6" transform="rotate(-10 110 200)"/>
+                            <rect x="140" y="140" width="60" height="110" rx="3" fill="#4a8f94" opacity="0.7" transform="rotate(-5 170 195)"/>
+                            <rect x="200" y="145" width="60" height="105" rx="3" fill="#7a6f47" opacity="0.6" transform="rotate(5 230 197)"/>
+                            <rect x="260" y="155" width="60" height="95" rx="3" fill="#5ba3a8" opacity="0.5" transform="rotate(10 290 202)"/>
+                            <circle cx="200" cy="320" r="40" fill="#4a8f94" opacity="0.3"/>
+                            <path d="M180,320 L200,300 L220,320" stroke="#2c5f63" stroke-width="3" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Escritura colaborativa -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">3. Escritura Colaborativa y Cibernética de Segundo Orden</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>Plataformas como <strong>Google Docs o Overleaf</strong> permiten observar los procesos de coautoría en tiempo real.</p>
+                    <div class="quote">
+                        En términos de Heinz von Foerster (2003), podríamos hablar de una <em>cibernética de segundo orden</em>, donde los observadores (autores) también se observan entre sí a través del texto.
+                    </div>
+                    <p style="margin-top: 20px;">Esto requiere desarrollar <strong>competencias para la negociación</strong> de significados y versiones.</p>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="collaborationPattern">
+                            <circle cx="150" cy="150" r="50" fill="#5ba3a8" opacity="0.4"/>
+                            <circle cx="250" cy="150" r="50" fill="#4a8f94" opacity="0.4"/>
+                            <circle cx="200" cy="250" r="50" fill="#7a6f47" opacity="0.4"/>
+                            <circle cx="150" cy="150" r="20" fill="#2c5f63" opacity="0.8"/>
+                            <circle cx="250" cy="150" r="20" fill="#2c5f63" opacity="0.8"/>
+                            <circle cx="200" cy="250" r="20" fill="#2c5f63" opacity="0.8"/>
+                            <path d="M170,160 Q200,180 230,160" stroke="#5ba3a8" stroke-width="3" fill="none" opacity="0.7"/>
+                            <path d="M240,170 Q230,210 210,240" stroke="#4a8f94" stroke-width="3" fill="none" opacity="0.7"/>
+                            <path d="M160,170 Q170,210 190,240" stroke="#7a6f47" stroke-width="3" fill="none" opacity="0.7"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Corrección automatizada -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">4. Corrección Automatizada y Reflexión sobre el Lenguaje</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>Herramientas como <strong>Grammarly o LanguageTool</strong> ofrecen retroalimentación sobre la forma, pero no sobre el contenido.</p>
+                    <p style="margin-top: 25px;">La forma es fundamental, pero en ciencias sociales el <em>contenido y su coherencia argumentativa</em> son ineludibles.</p>
+                    <div class="keywords" style="margin-top: 30px;">
+                        <strong>Principio clave:</strong> Las sugerencias automáticas deben ser valoradas desde el juicio crítico.
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="textPattern">
+                            <rect x="80" y="100" width="240" height="200" rx="10" fill="#5ba3a8" opacity="0.2"/>
+                            <line x1="100" y1="140" x2="300" y2="140" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <line x1="100" y1="170" x2="280" y2="170" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <line x1="100" y1="200" x2="300" y2="200" stroke="#7a6f47" stroke-width="3" opacity="0.6"/>
+                            <line x1="100" y1="230" x2="260" y2="230" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <line x1="100" y1="260" x2="290" y2="260" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <path d="M180,200 Q200,180 220,200" stroke="#7a6f47" stroke-width="4" fill="none"/>
+                            <circle cx="200" cy="180" r="8" fill="#7a6f47"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Antiplagio parte 1 -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">5. Antiplagio y Propiedad Intelectual (I)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p><strong>Turnitin o PlagScan</strong> no solo detectan coincidencias textuales, sino que promueven una cultura de la originalidad.</p>
+                    <h3 style="margin-top: 25px;">Retroalimentación negativa</h3>
+                    <p>Desde la teoría de sistemas, estas herramientas funcionan como <em>mecanismos de retroalimentación negativa</em>:</p>
+                    <ul>
+                        <li>Ayudan a corregir o evitar desviaciones</li>
+                        <li>La desviación sería copiar sin citar</li>
+                        <li>Mantienen reglas esenciales del sistema académico</li>
+                    </ul>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="feedbackPattern">
+                            <circle cx="200" cy="200" r="100" fill="none" stroke="#5ba3a8" stroke-width="4" opacity="0.6"/>
+                            <circle cx="200" cy="200" r="70" fill="none" stroke="#4a8f94" stroke-width="3" opacity="0.5"/>
+                            <circle cx="200" cy="200" r="40" fill="none" stroke="#7a6f47" stroke-width="2" opacity="0.4"/>
+                            <path d="M200,100 L200,150" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead2)"/>
+                            <path d="M300,200 L250,200" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead2)"/>
+                            <path d="M200,300 L200,250" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead2)"/>
+                            <path d="M100,200 L150,200" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead2)"/>
+                            <defs>
+                                <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#2c5f63"/>
+                                </marker>
+                            </defs>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Antiplagio parte 2 -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">5. Antiplagio y Propiedad Intelectual (II)</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>Las herramientas antiplagio <strong>no crean conocimiento</strong> ni motivan la creatividad por sí mismas.</p>
+                    <div class="quote">
+                        La verdadera formación académica va más allá de evitar el plagio. Implica comprender lo que se lee, pensar con autonomía y construir conocimiento nuevo.
+                    </div>
+                    <p style="margin-top: 20px; font-weight: 600; color: #2c5f63;">
+                        Ser científica o científico social no consiste en "pasar el filtro" de un programa, sino en aportar ideas propias con responsabilidad.
+                    </p>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="integrityPattern">
+                            <path d="M200,80 L150,200 L250,200 Z" fill="#5ba3a8" opacity="0.4"/>
+                            <path d="M200,120 L170,200 L230,200 Z" fill="#4a8f94" opacity="0.5"/>
+                            <circle cx="200" cy="150" r="30" fill="#7a6f47" opacity="0.6"/>
+                            <rect x="120" y="220" width="160" height="100" rx="5" fill="#5ba3a8" opacity="0.3"/>
+                            <line x1="140" y1="245" x2="260" y2="245" stroke="#2c5f63" stroke-width="2" opacity="0.6"/>
+                            <line x1="140" y1="270" x2="260" y2="270" stroke="#2c5f63" stroke-width="2" opacity="0.6"/>
+                            <line x1="140" y1="295" x2="260" y2="295" stroke="#2c5f63" stroke-width="2" opacity="0.6"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Inteligencia Artificial -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">6. Inteligencia Artificial y Asistencia Responsable</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>Los <strong>modelos de lenguaje</strong> pueden apoyar la estructuración o corrección de un texto, pero su uso debe mantenerse dentro de límites éticos.</p>
+                    <div class="quote">
+                        "La cibernética nos invita a observar nuestras propias observaciones." <br>— Bernard Scott (2021)
+                    </div>
+                    <p style="margin-top: 20px;">Pedirle a una IA que sugiera ideas <em>no sustituye</em> el pensamiento crítico, pero puede ser parte de un proceso reflexivo si se integra conscientemente.</p>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="aiPattern">
+                            <circle cx="200" cy="200" r="80" fill="none" stroke="#5ba3a8" stroke-width="3" stroke-dasharray="10,5" opacity="0.6"/>
+                            <circle cx="200" cy="200" r="50" fill="#4a8f94" opacity="0.3"/>
+                            <circle cx="180" cy="190" r="8" fill="#2c5f63"/>
+                            <circle cx="220" cy="190" r="8" fill="#2c5f63"/>
+                            <path d="M180,220 Q200,230 220,220" stroke="#2c5f63" stroke-width="3" fill="none"/>
+                            <path d="M120,150 L150,170" stroke="#7a6f47" stroke-width="2"/>
+                            <path d="M280,150 L250,170" stroke="#7a6f47" stroke-width="2"/>
+                            <path d="M120,250 L150,230" stroke="#7a6f47" stroke-width="2"/>
+                            <path d="M280,250 L250,230" stroke="#7a6f47" stroke-width="2"/>
+                            <circle cx="120" cy="150" r="5" fill="#7a6f47"/>
+                            <circle cx="280" cy="150" r="5" fill="#7a6f47"/>
+                            <circle cx="120" cy="250" r="5" fill="#7a6f47"/>
+                            <circle cx="280" cy="250" r="5" fill="#7a6f47"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Repositorios académicos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">7. Repositorios Académicos y Selección de Fuentes</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <p>El proceso de selección de fuentes es una <em>decisión que forma parte del sistema</em> de escritura académica.</p>
+                    <h3>Selectividad inherente</h3>
+                    <p>Elegir una fuente y no otra es natural en todo sistema: siempre hay una parte que se observa y otra que se deja sin observar.</p>
+                    <div class="keywords" style="margin-top: 25px;">
+                        <strong>Lo importante:</strong> Desarrollar criterios propios para decidir qué fuentes aportan realmente, leer críticamente, comparar autores y entender contextos.
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="repositoryPattern">
+                            <rect x="100" y="80" width="200" height="240" rx="8" fill="#5ba3a8" opacity="0.2"/>
+                            <rect x="120" y="100" width="160" height="30" rx="4" fill="#4a8f94" opacity="0.5"/>
+                            <rect x="120" y="145" width="160" height="30" rx="4" fill="#7a6f47" opacity="0.4"/>
+                            <rect x="120" y="190" width="160" height="30" rx="4" fill="#4a8f94" opacity="0.5"/>
+                            <rect x="120" y="235" width="160" height="30" rx="4" fill="#5ba3a8" opacity="0.5"/>
+                            <rect x="120" y="280" width="160" height="30" rx="4" fill="#4a8f94" opacity="0.5"/>
+                            <circle cx="340" cy="200" r="40" fill="#7a6f47" opacity="0.4"/>
+                            <path d="M280,115 L320,180" stroke="#2c5f63" stroke-width="3" marker-end="url(#arrowhead3)"/>
+                            <defs>
+                                <marker id="arrowhead3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#2c5f63"/>
+                                </marker>
+                            </defs>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conclusión -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Conclusión</h1>
+            </div>
+            <div class="slide-content">
+                <div class="text-content">
+                    <h2>Alfabetización tecnológica crítica</h2>
+                    <p>Este artículo contribuye a una <strong>alfabetización tecnológica crítica</strong> en las ciencias sociales.</p>
+                    <h3 style="margin-top: 25px;">Formar observadores reflexivos</h3>
+                    <p>Es necesario formar científicas y científicos capaces de:</p>
+                    <ul>
+                        <li>Integrar tecnologías sin renunciar a la <em>agencia epistémica</em></li>
+                        <li>Mantener el <em>pensamiento complejo</em></li>
+                        <li>Respetar la <em>diversidad de perspectivas</em> disciplinarias y de género</li>
+                        <li>Usar herramientas con consciencia del <em>entorno sociotécnico</em></li>
+                    </ul>
+                </div>
+                <div class="visual-content">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g id="conclusionPattern">
+                            <path d="M200,50 L250,150 L350,150 L270,220 L300,320 L200,260 L100,320 L130,220 L50,150 L150,150 Z" 
+                                  fill="#5ba3a8" opacity="0.3" stroke="#2c5f63" stroke-width="2"/>
+                            <circle cx="200" cy="200" r="60" fill="#4a8f94" opacity="0.5"/>
+                            <circle cx="200" cy="200" r="30" fill="#7a6f47" opacity="0.6"/>
+                            <path d="M170,200 L185,215 L230,170" stroke="#2c5f63" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Referencias -->
+        <div class="slide final-slide">
+            <div class="text-content">
+                <h1 class="slide-title">Referencias</h1>
+                <div style="font-size: 1.1em; line-height: 2; text-align: left; max-width: 800px; margin: 0 auto;">
+                    <p><strong>Esposito, E.</strong> (2022). <em>Artificial Communication: How Algorithms Produce Social Intelligence.</em> MIT Press.</p>
+                    <p style="margin-top: 15px;"><strong>Luhmann, N.</strong> (2018). <em>Organization and Decision.</em> Cambridge University Press.</p>
+                    <p style="margin-top: 15px;"><strong>Merton, R. K.</strong> (1968). <em>Social Theory and Social Structure.</em> Free Press.</p>
+                    <p style="margin-top: 15px;"><strong>von Foerster, H.</strong> (2003). <em>Understanding understanding: Essays on cybernetics and cognition.</em> Springer.</p>
+                    <p style="margin-top: 15px;"><strong>Scott, B.</strong> (2021). <em>Cybernetics for the Social Sciences.</em> Brill.</p>
+                </div>
+                <div style="margin-top: 60px; font-size: 1.5em; color: #5ba3a8; font-style: italic;">
+                    Gracias por su atención
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">13</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            animateCurrentSlide();
+        }
+        
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+        
+        // Animaciones SVG
+        function animateCurrentSlide() {
+            const currentSVG = slides[currentSlide].querySelector('svg');
+            if (!currentSVG) return;
+            
+            const groups = currentSVG.querySelectorAll('g');
+            groups.forEach(group => {
+                group.style.opacity = '0';
+                setTimeout(() => {
+                    group.style.transition = 'opacity 1s ease-in-out';
+                    group.style.opacity = '1';
+                }, 100);
+            });
+            
+            animateSVGElements(currentSVG);
+        }
+        
+        function animateSVGElements(svg) {
+            const circles = svg.querySelectorAll('circle');
+            const paths = svg.querySelectorAll('path');
+            const lines = svg.querySelectorAll('line');
+            const rects = svg.querySelectorAll('rect');
+            
+            circles.forEach((circle, index) => {
+                const originalR = circle.getAttribute('r') || 10;
+                animateElement(circle, 'r', originalR, 2000 + index * 200);
+            });
+            
+            paths.forEach((path, index) => {
+                animatePath(path, 3000 + index * 300);
+            });
+            
+            lines.forEach((line, index) => {
+                animateLine(line, 2500 + index * 250);
+            });
+            
+            rects.forEach((rect, index) => {
+                animateRect(rect, 2000 + index * 200);
+            });
+        }
+        
+        function animateElement(element, attr, value, duration) {
+            let start = null;
+            const originalValue = parseFloat(value);
+            const variance = originalValue * 0.1;
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) % duration;
+                const percentage = progress / duration;
+                
+                const newValue = originalValue + Math.sin(percentage * Math.PI * 2) * variance;
+                element.setAttribute(attr, newValue);
+                
+                requestAnimationFrame(step);
+            }
+            
+            requestAnimationFrame(step);
+        }
+        
+        function animatePath(path, duration) {
+            const length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            
+            let start = null;
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) % duration;
+                const percentage = progress / duration;
+                
+                const offset = length - (length * percentage);
+                path.style.strokeDashoffset = offset;
+                
+                requestAnimationFrame(step);
+            }
+            
+            requestAnimationFrame(step);
+        }
+        
+        function animateLine(line, duration) {
+            const x1 = parseFloat(line.getAttribute('x1'));
+            const x2 = parseFloat(line.getAttribute('x2'));
+            const y1 = parseFloat(line.getAttribute('y1'));
+            const y2 = parseFloat(line.getAttribute('y2'));
+            
+            let start = null;
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) % duration;
+                const percentage = progress / duration;
+                
+                const offset = Math.sin(percentage * Math.PI * 2) * 3;
+                line.setAttribute('x1', x1 + offset);
+                line.setAttribute('x2', x2 + offset);
+                line.setAttribute('y1', y1 + offset);
+                line.setAttribute('y2', y2 + offset);
+                
+                requestAnimationFrame(step);
+            }
+            
+            requestAnimationFrame(step);
+        }
+        
+        function animateRect(rect, duration) {
+            const originalOpacity = rect.getAttribute('opacity') || 0.5;
+            
+            let start = null;
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) % duration;
+                const percentage = progress / duration;
+                
+                const opacity = parseFloat(originalOpacity) + Math.sin(percentage * Math.PI * 2) * 0.2;
+                rect.setAttribute('opacity', Math.max(0.1, opacity));
+                
+                requestAnimationFrame(step);
+            }
+            
+            requestAnimationFrame(step);
+        }
+        
+        // Inicializar
+        showSlide(0);
+    </script>
+</body>
+</html>
